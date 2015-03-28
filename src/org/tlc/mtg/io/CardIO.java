@@ -42,6 +42,10 @@ public class CardIO {
 
             String ln;
             while( (ln = br.readLine()) != null ) {
+                if( ln.startsWith("#") || ln.startsWith("//") )
+                    continue;
+                if( ln.trim().length() == 0 )
+                    continue;
                 ret.add(ln);
             }
         }

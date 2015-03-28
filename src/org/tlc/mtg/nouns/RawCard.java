@@ -31,6 +31,10 @@ public class RawCard {
         this.type = type;
     }
 
+    public Object getFieldByName(String nm) {
+        return raw.get(nm);
+    }
+
     @Override
     public String toString() {
         return name + ": " + type;
