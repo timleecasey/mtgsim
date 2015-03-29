@@ -5,7 +5,9 @@ import org.tlc.mtg.io.ResultsIO;
 import org.tlc.mtg.nouns.Card;
 import org.tlc.mtg.nouns.DeckSpec;
 import org.tlc.mtg.nouns.RawCard;
+import org.tlc.mtg.util.Counter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +17,13 @@ public class MtgSim {
     private Map<String, RawCard> cards;
     private List<String> deckLines;
     private DeckSpec protoDeck;
+    private Map<Integer, Counter> damageFreqs = new HashMap<>();
 
     public MtgSim(Map<String, RawCard> cards, List<String> deckLines) {
         this.cards = cards;
         this.deckLines = deckLines;
         protoDeck = new DeckSpec();
+        damageFreqs = new HashMap<>();
     }
 
     public void parseToDeck() {
@@ -52,14 +56,31 @@ public class MtgSim {
     }
 
     public void simulate() {
+        DeckGenerator gen = new DeckGenerator(protoDeck);
+        gen.populate();
+        final Map<Integer, Counter> damageFreqs = new HashMap<>();
 
+        PermuteArray<Card> permute = new PermuteArray<>(gen.getSrc());
+        permute.visit(new PermuteArray.PermuteListVisitor<Card>() {
+            @Override
+            public void visit(List<Card> cur) {
+                DamageCalc dam = new DamageCalc(cur);
+                int n = dam.damage();
+                Counter c = damageFreqs.get(n);
+                if( c == null ) {
+                    c = new Counter();
+                    damageFreqs.put(n, c);
+                }
+                c.inc();
+            }
+        });
     }
 
     //
     // Damage, frequency
     //
-    public Map<Integer, Integer> results() {
-        return null;
+    public Map<Integer, Counter> results() {
+        return damageFreqs;
     }
 
     public static void main(String[] av) throws Exception {

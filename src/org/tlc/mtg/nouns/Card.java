@@ -27,6 +27,8 @@ public class Card {
     }
 
     public String toString() {
-        return name + ": " + cost;
+        if( cost == null || ! cost.hasCost )
+            return name;
+        return name + ": " + cost + (animal.hasPwr ? (" " + animal) : "");
     }
 }
