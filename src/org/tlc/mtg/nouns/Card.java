@@ -5,12 +5,14 @@ package org.tlc.mtg.nouns;
 public class Card {
     public String name;
     public String type;
+    public ResolvedType resType;
     public CostSpec cost;
     public CreatureSpec animal;
 
     public void bind(RawCard raw) {
         this.name = raw.getName();
         this.type = raw.getType();
+        this.resType = ResolvedType.resolve(this.type);
         this.cost = new CostSpec();
         this.cost.bind(raw);
         this.animal = new CreatureSpec();
@@ -30,5 +32,12 @@ public class Card {
         if( cost == null || ! cost.hasCost )
             return name;
         return name + ": " + cost + (animal.hasPwr ? (" " + animal) : "");
+    }
+
+    public long computeDamage(int step, int len) {
+        if( animal.hasPwr ) {
+            return (len - step) * (long)animal.power;
+        }
+        return 0;
     }
 }

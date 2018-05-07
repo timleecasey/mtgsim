@@ -10,6 +10,7 @@ import org.tlc.mtg.util.Counter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  */
@@ -17,7 +18,7 @@ public class MtgSim {
     private Map<String, RawCard> cards;
     private List<String> deckLines;
     private DeckSpec protoDeck;
-    private Map<Integer, Counter> damageFreqs = new HashMap<>();
+    private Map<Integer, Counter> damageFreqs = new TreeMap<>();
 
     public MtgSim(Map<String, RawCard> cards, List<String> deckLines) {
         this.cards = cards;
@@ -58,22 +59,30 @@ public class MtgSim {
     public void simulate() {
         DeckGenerator gen = new DeckGenerator(protoDeck);
         gen.populate();
-        final Map<Integer, Counter> damageFreqs = new HashMap<>();
+        final Map<Long, Counter> damageFreqs = new HashMap<>();
+        final Counter counter = new Counter();
 
         PermuteArray<Card> permute = new PermuteArray<>(gen.getSrc());
         permute.visit(new PermuteArray.PermuteListVisitor<Card>() {
             @Override
             public void visit(List<Card> cur) {
                 DamageCalc dam = new DamageCalc(cur);
-                int n = dam.damage();
+                long n = dam.damage();
                 Counter c = damageFreqs.get(n);
                 if( c == null ) {
                     c = new Counter();
                     damageFreqs.put(n, c);
                 }
                 c.inc();
+                counter.inc();
+
             }
         });
+
+        for( long n : damageFreqs.keySet() ) {
+            System.out.println(n + ":" + damageFreqs.get(n));
+        }
+        System.out.println(counter.getValue() + " runs");
     }
 
     //

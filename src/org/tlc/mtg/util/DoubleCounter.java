@@ -2,10 +2,10 @@ package org.tlc.mtg.util;
 
 /**
  */
-public class Counter {
-    private long value;
+public class DoubleCounter {
+    private double value;
 
-    public long getValue() {
+    public double getValue() {
         return value;
     }
 
@@ -13,12 +13,8 @@ public class Counter {
         value++;
     }
 
-    public void inc(int n) {
-        value += n;
-    }
-
-    public void inc(long l) {
-        value += l;
+    public void inc(double d) {
+        value += d;
     }
 
     public void reset() {

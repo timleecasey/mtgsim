@@ -13,12 +13,15 @@ public class DamageCalc {
         this.src = src;
     }
 
-    public int damage() {
+    public long damage() {
 
-        int sum = 0;
+        long sum = 0;
+        int step = 0;
+        int len = src.size();
 
         for( Card c : src ) {
-
+            sum += c.computeDamage(step, len);
+            step++;
         }
 
         return sum;
