@@ -32,8 +32,8 @@ public class PermuteArray<T> {
                 vSrc.clear();
                 for( int i=0 ; i < src.size() ; i++ ) {
                     vSrc.add(src.get(a[i]));
-                    v.visit(vSrc);
                 }
+                v.visit(vSrc);
             }
         });
     }

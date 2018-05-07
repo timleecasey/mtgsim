@@ -19,8 +19,9 @@ public class PermuteIndex {
 
     public void generate(int start, int len, PermuteVisitor v) {
         int c;
-        if (len - start == 1) {
+        if (len - start <= 1) {
             v.visit(a);
+          return;
         }
         for( c=start ; c < len ; c++) {
             swap(c, len - 1);
