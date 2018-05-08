@@ -1,5 +1,8 @@
 package org.tlc.mtg.nouns;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  */
 public class Card {
@@ -8,6 +11,7 @@ public class Card {
     public ResolvedType resType;
     public CostSpec cost;
     public CreatureSpec animal;
+    public List<Card> attached = new ArrayList<>();
 
     public void bind(RawCard raw) {
         this.name = raw.getName();
