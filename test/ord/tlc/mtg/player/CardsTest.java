@@ -15,10 +15,7 @@ public class CardsTest {
   @Test
   public void testShuffle() {
 
-    Cards cards = new Cards() {
-      @Override public void add(Card c) { cards.add(c); }
-      @Override public Card remove() {return null;}
-    };
+    Cards cards = new Cards();
 
     for( int i=0 ; i < 10 ; i++ ) {
       cards.add(genCard("" + i));
@@ -31,10 +28,7 @@ public class CardsTest {
     Assert.assertEquals("even names", 10, names.size());
     names.clear();
 
-    cards = new Cards() {
-      @Override public void add(Card c) { cards.add(c); }
-      @Override public Card remove() {return null;}
-    };
+    cards = new Cards();
 
     for( int i=0 ; i < 11 ; i++ ) {
       cards.add(genCard("" + i));

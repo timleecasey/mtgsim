@@ -12,6 +12,7 @@ public class Card {
     public CostSpec cost;
     public CreatureSpec animal;
     public List<Card> attached = new ArrayList<>();
+    public boolean tapped = false;
 
     public void bind(RawCard raw) {
         this.name = raw.getName();
@@ -29,13 +30,18 @@ public class Card {
         ret.type = that.type;
         ret.cost = that.cost;
         ret.animal = that.animal;
+        ret.resType = that.resType;
         return ret;
     }
 
     public String toString() {
         if( cost == null || ! cost.hasCost )
             return name;
-        return name + ": " + cost + (animal.hasPwr ? (" " + animal) : "");
+        return name +
+            ": " +
+            cost +
+            (animal.hasPwr ? (" " + animal) : "") +
+            (tapped ? " - " : " | ");
     }
 
     public long computeDamage(int step, int len) {

@@ -8,6 +8,7 @@ public class CreatureSpec {
     public int power;
     public int toughness;
     public boolean hasPwr;
+    public boolean sick;
 
     void bind(RawCard raw) {
         String pStr = (String) raw.getFieldByName("power");
