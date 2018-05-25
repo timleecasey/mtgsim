@@ -127,7 +127,10 @@ public class Cards {
    * Shuffle the given cards.  This routine simulates a bridge shuffle.
    */
   public void shuffle() {
-    for( int i=0 ; i < 6 ; i++ ) {
+    //
+    // http://www.kibble.net/magic/magic09.php
+    //
+    for( int i=0 ; i < 8 ; i++ ) {
       shuffleRound();
     }
   }

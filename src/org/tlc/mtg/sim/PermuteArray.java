@@ -25,7 +25,7 @@ public class PermuteArray<T> {
         indexes = new PermuteIndex(a);
     }
 
-    public void visit(final PermuteListVisitor<T> v) {
+    public void permutations(final PermuteListVisitor<T> v) {
         indexes.generate(new PermuteIndex.PermuteVisitor() {
             @Override
             public void visit(int[] a) {
@@ -36,5 +36,18 @@ public class PermuteArray<T> {
                 v.visit(vSrc);
             }
         });
+    }
+
+    public void trials(PermuteListVisitor<T> v) {
+        indexes.trials(new PermuteIndex.PermuteListVisitor() {
+            @Override
+            public void visit(List<Integer> a) {
+                vSrc.clear();
+                for( int i=0 ; i < src.size() ; i++ ) {
+                    vSrc.add(src.get(a.get(i)));
+                }
+                v.visit(vSrc);
+            }
+        }, 1000000);
     }
 }

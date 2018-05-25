@@ -66,31 +66,36 @@ public class MtgSim {
         final PlayerTurnPhases ptp = new PlayerTurnPhases();
 
         PermuteArray<Card> permute = new PermuteArray<>(gen.getSrc());
-        permute.visit(new PermuteArray.PermuteListVisitor<Card>() {
-            @Override
-            public void visit(List<Card> cur) {
-              counter.inc();
-              ptp.assignDeck(cur);
-              ptp.playout();
-              if( ptp.getPlayer().isConstrained() ) {
-                constrained.inc();
-              }
-              if( counter.getValue() % 1000000 == 0 ) {
-                System.out.println(constrained.getValue() + " / " + counter.getValue());
-              }
-//                DamageCalc dam = new DamageCalc(cur);
-//                long n = dam.damage();
-//                Counter c = damageFreqs.get(n);
-//                if( c == null ) {
-//                    c = new Counter();
-//                    damageFreqs.put(n, c);
-//                }
-//                c.inc();
-//                counter.inc();
-//
+//        permute.permutations(new PermuteArray.PermuteListVisitor<Card>() {
+//          @Override
+//          public void visit(List<Card> cur) {
+//            counter.inc();
+//            ptp.assignDeck(cur);
+//            ptp.playout();
+//            if (ptp.getPlayer().isConstrained()) {
+//              constrained.inc();
+//            }
+//            if (counter.getValue() % 1000000 == 0) {
+//              System.out.println(constrained.getValue() + " / " + counter.getValue());
+//            }
+//          }
+//        });
+        permute.trials(new PermuteArray.PermuteListVisitor<Card>() {
+          @Override
+          public void visit(List<Card> cur) {
+            counter.inc();
+            ptp.assignDeck(cur);
+            ptp.playout();
+            if (ptp.getPlayer().isConstrained()) {
+              constrained.inc();
             }
+//            if (counter.getValue() % 100000 == 0) {
+//              System.out.println(constrained.getValue() + " / " + counter.getValue());
+//            }
+          }
         });
 
+        System.out.println(constrained.getValue() + " / " + counter.getValue());
         for( long n : damageFreqs.keySet() ) {
             System.out.println(n + ":" + damageFreqs.get(n));
         }

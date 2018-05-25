@@ -10,8 +10,8 @@ public class Player {
   private int turn;
   private int life;
   private Cards deck = new Cards();
-  private Hand hand;
-  private Board board;
+  private Hand hand = new Hand();
+  private Board board = new Board();
   private Cards grave = new Cards();
   private Cards out = new Cards();
 
