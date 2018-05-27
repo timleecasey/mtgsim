@@ -8,13 +8,6 @@ import org.tlc.mtg.nouns.ResolvedType;
  */
 public class BoardCritters extends Cards {
   public void clearSummoning() {
-    visit(new CardVisitor() {
-      @Override
-      public void visit(Card c) {
-        if( c.resType.equals(ResolvedType.CRITTER) ) {
-          c.animal.sick = false;
-        }
-      }
-    });
+    visit(c -> c.resType.clearSummoning(c));
   }
 }

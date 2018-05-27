@@ -7,6 +7,10 @@ import java.util.Map;
 public class CreatureSpec {
     public int power;
     public int toughness;
+    /**
+     * The current accrued damage.
+     */
+    public int damage;
     public boolean hasPwr;
     public boolean sick;
 

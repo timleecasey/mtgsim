@@ -9,12 +9,32 @@ public enum ResolvedType {
     @Override
     public void play(Board b, Card c) {
       b.getPlanesWalkers().add(c);
+      if( c.animal.hasPwr ) {
+        c.animal.sick = true;
+      }
+    }
+
+    @Override
+    public void clearSummoning(Card c) {
+      if( c.animal.hasPwr ) {
+        c.animal.sick = false;
+      }
     }
   },
   ARTIFACT {
     @Override
     public void play(Board b, Card c) {
       b.getArtifacts().add(c);
+      if( c.animal.hasPwr ) {
+        c.animal.sick = true;
+      }
+    }
+
+    @Override
+    public void clearSummoning(Card c) {
+      if( c.animal.hasPwr ) {
+        c.animal.sick = false;
+      }
     }
   },
   LAND {
@@ -27,6 +47,16 @@ public enum ResolvedType {
     @Override
     public void play(Board b, Card c) {
       b.getCritters().add(c);
+      if( c.animal.hasPwr ) {
+        c.animal.sick = true;
+      }
+    }
+
+    @Override
+    public void clearSummoning(Card c) {
+      if( c.animal.hasPwr ) {
+        c.animal.sick = false;
+      }
     }
   },
   SPELL {
@@ -48,9 +78,11 @@ public enum ResolvedType {
     }
   };
 
-  public void play(Board b, Card c) {
+  public void play(Board b, Card c)
+    { }
 
-  }
+  public void clearSummoning(Card c)
+    { }
 
   public static ResolvedType resolve(String type) {
     String[] toks = type.split("\\s+");
