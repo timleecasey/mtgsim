@@ -36,7 +36,7 @@ public class Card {
 
     public String toString() {
         if( cost == null || ! cost.hasCost )
-            return name;
+            return name + (tapped ? " - " : " | ");
         return name +
             ": " +
             cost +

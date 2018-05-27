@@ -24,6 +24,18 @@ public class Cards {
     public void visit(Card c);
   }
 
+  public static class CardCollector implements CardVisitor {
+    protected List<Card> collected = new ArrayList<>();
+    @Override
+    public void visit(Card c) {
+      collected.add(c);
+    }
+
+    public List<Card> getCollected() {
+      return collected;
+    }
+  }
+
   public void add(Card c) {
     cards.add(c);
   }

@@ -17,6 +17,7 @@ public class PlayerTurnPhases {
 
   private void untap() {
     player.getBoard().getCritters().clearSummoning();
+    player.getBoard().untap();
   }
 
   public void upkeep() {
@@ -29,7 +30,13 @@ public class PlayerTurnPhases {
   }
 
   public void spells() {
-
+    //
+    // greedy
+    //
+    Card c;
+    while( ( c = player.findTopCast()) != null ) {
+      player.castSpell(c);
+    }
   }
 
   public void land() {
@@ -38,7 +45,7 @@ public class PlayerTurnPhases {
       if( ! player.getHand().takeSpecific(c) ) {
         throw new IllegalStateException("Could not pull something found");
       }
-      player.getBoard().getLand().add(c);
+      player.placeLand(c);
     }
 
     if( player.getTurn() > 9 && player.getBoard().getLand().depth() == 0 ) {
@@ -57,7 +64,7 @@ public class PlayerTurnPhases {
   public void end() {
     while( player.getHand().depth() > 7 ) {
       Card c = player.getHand().pullTopOne();
-      player.getGrave().add(c);
+      player.getBoard().getGrave().add(c);
     }
   }
 

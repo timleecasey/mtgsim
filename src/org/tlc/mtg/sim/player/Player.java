@@ -1,8 +1,15 @@
 package org.tlc.mtg.sim.player;
 
 import org.tlc.mtg.nouns.Card;
+import org.tlc.mtg.nouns.CardSorts;
+import org.tlc.mtg.nouns.Mana;
+import org.tlc.mtg.nouns.ResolvedType;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  */
@@ -12,7 +19,6 @@ public class Player {
   private Cards deck = new Cards();
   private Hand hand = new Hand();
   private Board board = new Board();
-  private Cards grave = new Cards();
   private Cards out = new Cards();
 
   private boolean constrained;
@@ -28,8 +34,49 @@ public class Player {
     deck.reset();
     hand.reset();
     board.reset();
-    grave.reset();
     out.reset();
+  }
+
+  /**
+   * Given a hand and a board with lands, find the maximal thing to cast in hand.
+   * This returns a card, but makes no changes to the hand or board.  This is a simple match of resources to cards.
+   * @return the card to cast.
+   */
+  public Card findTopCast() {
+    Card ret = null;
+    Cards.CardCollector cc = new Cards.CardCollector();
+    getHand().visit(cc);
+    Collections.sort(cc.getCollected(), new CardSorts.HiToLowDamageSort());
+    for( Card c : cc.getCollected() ) {
+      if( canCast(c) ) {
+        ret = c;
+        break;
+      }
+    }
+    return ret;
+  }
+
+  public void placeLand(Card c) {
+    getBoard().getLand().add(c);
+  }
+
+  /**
+   * Given the card in your hand, place this card as a spell.
+   * @param c a given card in your hand
+   */
+  public void castSpell(Card c) {
+    Set<Card> plan = castPlan(c);
+    if( plan == null )
+      return;
+
+    if( ! hand.takeSpecific(c) ) {
+      return;
+    }
+
+    c.resType.play(getBoard(), c);
+    for( Card land : plan ) {
+      land.tapped = true;
+    }
   }
 
   public void initialDraw() {
@@ -43,6 +90,57 @@ public class Player {
 
   public void removeFromLife(int n) {
     life -= n;
+  }
+
+  protected boolean canCast(Card c) {
+    Set<Card> plan = castPlan(c);
+    if( plan == null )
+      return false;
+    if( c.cost.hasCost && plan.size() == c.cost.slots.length ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  protected Set<Card> castPlan(Card c) {
+    if( c.cost.hasCost ) {
+      Set<Card> toBeUsed = new HashSet<>();
+      Cards.CardCollector cc = new Cards.CardCollector();
+      getBoard().getLand().visit(cc);
+      List<Card> src = cc.getCollected();
+      for( Mana m : c.cost.slots) {
+        Card land = findAndRemove(src, m);
+        if( land == null ) {
+          return null;
+        }
+        toBeUsed.add(land);
+      }
+      return toBeUsed;
+    } else {
+      return new HashSet<>();
+    }
+  }
+
+  protected Card findAndRemove(List<Card> src, Mana m) {
+    Card ret = null;
+    for( Card c : src ) {
+      if( ! c.resType.equals(ResolvedType.LAND) ) {
+        continue;
+      }
+      if( c.tapped ) {
+        continue;
+      }
+      if( m.accepts(c) ) {
+        ret = c;
+        break;
+      }
+    }
+
+    if( ret != null ) {
+      src.remove(ret);
+    }
+    return ret;
   }
 
   public int getLife() {
@@ -59,10 +157,6 @@ public class Player {
 
   public Board getBoard() {
     return board;
-  }
-
-  public Cards getGrave() {
-    return grave;
   }
 
   public Cards getOut() {

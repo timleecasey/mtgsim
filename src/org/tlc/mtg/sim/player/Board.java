@@ -1,5 +1,8 @@
 package org.tlc.mtg.sim.player;
 
+import org.tlc.mtg.nouns.Card;
+import sun.jvm.hotspot.debugger.win32.coff.ExportDirectoryTable;
+
 /**
  */
 public class Board {
@@ -8,6 +11,7 @@ public class Board {
   private ExposedCards enchantments;
   private ExposedCards artifacts;
   private ExposedCards planesWalkers;
+  private ExposedCards grave;
 
   public Board() {
     land = new ExposedCards();
@@ -15,6 +19,7 @@ public class Board {
     enchantments = new ExposedCards();
     artifacts = new ExposedCards();
     planesWalkers = new ExposedCards();
+    grave = new ExposedCards();
   }
 
   public void reset() {
@@ -23,6 +28,15 @@ public class Board {
     enchantments.reset();
     artifacts.reset();
     planesWalkers.reset();
+    grave.reset();
+  }
+
+  public void untap() {
+    Cards.CardVisitor v = new UntapVisitor();
+    land.visit(v);
+    artifacts.visit(v);
+    planesWalkers.visit(v);
+    critters.visit(v);
   }
 
   public ExposedCards getLand() {
@@ -43,5 +57,17 @@ public class Board {
 
   public ExposedCards getPlanesWalkers() {
     return planesWalkers;
+  }
+
+  public ExposedCards getGrave() {
+    return grave;
+  }
+
+  public static class UntapVisitor implements Cards.CardVisitor{
+
+    @Override
+    public void visit(Card c) {
+      c.tapped = false;
+    }
   }
 }
