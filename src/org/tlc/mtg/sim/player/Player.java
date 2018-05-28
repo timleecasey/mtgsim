@@ -4,10 +4,11 @@ import org.tlc.mtg.nouns.Card;
 import org.tlc.mtg.nouns.CardSorts;
 import org.tlc.mtg.nouns.Mana;
 import org.tlc.mtg.nouns.ResolvedType;
+import org.tlc.mtg.nouns.Stage;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ public class Player {
   private Hand hand = new Hand();
   private Board board = new Board();
   private Cards out = new Cards();
+  private List<Stage<Player>> stages = new ArrayList<>();
 
   private boolean constrained;
 
@@ -178,4 +180,15 @@ public class Player {
   public void setConstrained(boolean constrained) {
     this.constrained = constrained;
   }
+
+  public List<Stage<Player>> getStages() {
+    return stages;
+  }
+
+  @Override
+  public String toString() {
+    return "L: " + life + " H: " + hand.depth() + " D: " + deck.depth() + " @ T " + turn;
+  }
+
+
 }

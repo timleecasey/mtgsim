@@ -1,5 +1,7 @@
 package org.tlc.mtg.sim;
 
+import org.tlc.mtg.util.time.DateTimeUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class PermuteArray<T> {
     }
 
     public void trials(PermuteListVisitor<T> v) {
+        long start = System.currentTimeMillis();
         indexes.trials(new PermuteIndex.PermuteListVisitor() {
             @Override
             public void visit(List<Integer> a) {
@@ -48,6 +51,8 @@ public class PermuteArray<T> {
                 }
                 v.visit(vSrc);
             }
-        }, 1000000);
+        }, 100000);
+        long end = System.currentTimeMillis();
+        System.out.println("Sim time: " + DateTimeUtils.formatTime(end - start));
     }
 }

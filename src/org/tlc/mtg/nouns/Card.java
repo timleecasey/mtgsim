@@ -13,6 +13,10 @@ public class Card {
     public CreatureSpec animal;
     public List<Card> attached = new ArrayList<>();
     public boolean tapped = false;
+    /**
+     * Keywords
+     */
+    public List<Stage<Card>> stages = new ArrayList<>();
 
     public void bind(RawCard raw) {
         this.name = raw.getName();

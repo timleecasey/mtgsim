@@ -12,6 +12,7 @@ public class Board {
   private ExposedCards artifacts;
   private ExposedCards planesWalkers;
   private ExposedCards grave;
+  private ExposedCards attackSet;
 
   public Board() {
     land = new ExposedCards();
@@ -20,6 +21,7 @@ public class Board {
     artifacts = new ExposedCards();
     planesWalkers = new ExposedCards();
     grave = new ExposedCards();
+    attackSet = new ExposedCards();
   }
 
   public void reset() {
@@ -29,6 +31,7 @@ public class Board {
     artifacts.reset();
     planesWalkers.reset();
     grave.reset();
+    attackSet.reset();
   }
 
   public void untap() {
@@ -61,6 +64,10 @@ public class Board {
 
   public ExposedCards getGrave() {
     return grave;
+  }
+
+  public ExposedCards getAttackSet() {
+    return attackSet;
   }
 
   public static class UntapVisitor implements Cards.CardVisitor{

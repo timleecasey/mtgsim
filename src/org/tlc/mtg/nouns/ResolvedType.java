@@ -105,6 +105,9 @@ public enum ResolvedType {
         case "Artifact":
           ret = ARTIFACT;
           break;
+        case "Sorcery":
+          ret = SPELL;
+          break;
         case "Instant":
           ret = INSTANT;
           break;
