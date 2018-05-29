@@ -4,6 +4,7 @@ import org.tlc.mtg.nouns.Card;
 import org.tlc.mtg.nouns.ResolvedType;
 import org.tlc.mtg.nouns.Stage;
 import org.tlc.mtg.nouns.Phases;
+import org.tlc.mtg.sim.Stats;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class PlayerPhases {
         Card c;
         while( ( c = p.findTopCast()) != null ) {
           p.castSpell(c);
+          Stats.cur.critter++;
         }
         return p;
       };
@@ -72,6 +74,7 @@ public class PlayerPhases {
             throw new IllegalStateException("Could not pull something found");
           }
           p.placeLand(c);
+          Stats.cur.land++;
         }
 
         if( p.getTurn() > 9 && p.getBoard().getLand().depth() == 0 ) {
@@ -105,6 +108,7 @@ public class PlayerPhases {
         while( p.getHand().depth() > 7 ) {
           Card c = p.getHand().pullTopOne();
           p.getBoard().getGrave().add(c);
+          Stats.cur.discard++;
         }
         return p;
       };
@@ -128,6 +132,7 @@ public class PlayerPhases {
   public void playout() {
     player.initialDraw();
     while( player.getDeck().hasSome() ) {
+      Stats.cur = Stats.src[player.getTurn()];
       player.incTurn();
 
       for( Stage<Player> s : player.getStages() ) {

@@ -20,6 +20,7 @@ public class MtgSim {
   private List<String> deckLines;
   private DeckSpec protoDeck;
   private Map<Integer, Counter> damageFreqs = new TreeMap<>();
+  private Stats[] stats;
 
   public MtgSim(Map<String, RawCard> cardDict, List<String> deckLines) {
     this.cardDict = cardDict;
@@ -64,6 +65,11 @@ public class MtgSim {
     final Counter counter = new Counter();
     final Counter constrained = new Counter();
     final PlayerPhases ptp = new PlayerPhases();
+    List<Card> cards = gen.getSrc();
+    Stats.src = new Stats[cards.size()];
+    for( int i=0 ; i < Stats.src.length ; i++ ) {
+      Stats.src[i] = new Stats();
+    }
 
     PermuteArray<Card> permute = new PermuteArray<>(gen.getSrc());
 //        permute.permutations(new PermuteArray.PermuteListVisitor<Card>() {
