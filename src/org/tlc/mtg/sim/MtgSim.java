@@ -112,7 +112,7 @@ public class MtgSim {
   public static void main(String[] av) throws Exception {
     System.out.println("Cards...");
     Map<String, RawCard> cards = CardIO.read(av[0]);
-    System.out.println("Read " + cards.size());
+    System.out.println("Read " + cards.size() + " total cards.");
     System.out.println("Decks...");
     List<String> cardLines = CardIO.readCardLines(av[1]);
     System.out.println("Deck contains " + cardLines.size() + " lines with " + sizeDeck(cardLines) + " cards.");

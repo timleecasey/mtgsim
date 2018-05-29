@@ -7,13 +7,13 @@ import java.util.function.Function;
 /**
  */
 public class Stage<T> {
-  public Set<StageNode> nodes = new HashSet<>();
+  public Set<Phases> phases = new HashSet<>();
   public Function<T, T> func;
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    for( StageNode n : nodes ) {
+    for( Phases n : phases) {
       if( sb.length() > 0 ) {
         sb.append(", ");
       }

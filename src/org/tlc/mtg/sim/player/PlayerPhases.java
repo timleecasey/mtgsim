@@ -3,7 +3,7 @@ package org.tlc.mtg.sim.player;
 import org.tlc.mtg.nouns.Card;
 import org.tlc.mtg.nouns.ResolvedType;
 import org.tlc.mtg.nouns.Stage;
-import org.tlc.mtg.nouns.StageNode;
+import org.tlc.mtg.nouns.Phases;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class PlayerPhases {
 
   public static class Untap extends Stage<Player> {
     public Untap() {
-      nodes.add(StageNode.UNTAP);
+      phases.add(Phases.UNTAP);
       func = p -> {
         p.getBoard().getCritters().clearSummoning();
         p.getBoard().untap();
@@ -30,14 +30,14 @@ public class PlayerPhases {
 
   public static class Upkeep extends Stage<Player> {
     public Upkeep() {
-      nodes.add(StageNode.UPKEEP);
+      phases.add(Phases.UPKEEP);
       func = p -> p;
     }
   }
 
   public static class Draw extends Stage<Player> {
     public Draw() {
-      nodes.add(StageNode.DRAW);
+      phases.add(Phases.DRAW);
       func = p -> {
         Card c = p.getDeck().pullTopOne();
         p.getHand().add(c);
@@ -48,7 +48,7 @@ public class PlayerPhases {
 
   public static class Spells extends Stage<Player> {
     public Spells() {
-      nodes.add(StageNode.CAST);
+      phases.add(Phases.CAST);
       func = p -> {
         //
         // greedy
@@ -64,7 +64,7 @@ public class PlayerPhases {
 
   public static class Land extends Stage<Player> {
     public Land() {
-      nodes.add(StageNode.LAND);
+      phases.add(Phases.LAND);
       func = p -> {
         Card c;
         if( (c = p.getHand().hasOneOrNull(ResolvedType.LAND)) != null ) {
@@ -85,7 +85,7 @@ public class PlayerPhases {
 
   public static class Attack extends Stage<Player> {
     public Attack() {
-      nodes.add(StageNode.CLEANUP);
+      phases.add(Phases.CLEANUP);
       func = p -> p;
     }
   }
@@ -93,14 +93,14 @@ public class PlayerPhases {
 
   public static class CleanUp extends Stage<Player> {
     public CleanUp() {
-      nodes.add(StageNode.CLEANUP);
+      phases.add(Phases.CLEANUP);
       func = p -> p;
     }
   }
 
   public static class End extends Stage<Player> {
     public End() {
-      nodes.add(StageNode.END);
+      phases.add(Phases.END);
       func = p -> {
         while( p.getHand().depth() > 7 ) {
           Card c = p.getHand().pullTopOne();

@@ -14,8 +14,6 @@ public class CostSpec {
   void bind(RawCard raw) {
 
     String rawCost = ((String)raw.getFieldByName("manaCost"));
-    if( rawCost != null )
-      rawCost = rawCost.replaceAll("[\\{\\}]", "");
     this.mana = rawCost;
     if( this.mana == null ) {
       hasCost = false;
@@ -26,6 +24,7 @@ public class CostSpec {
   }
 
   protected void buildCost() {
+    Mana m;
     List<Mana> l = new ArrayList<>();
     char ca[] = mana.toCharArray();
     for( int at=0 ; at < ca.length ; at++ ) {
@@ -40,45 +39,47 @@ public class CostSpec {
         case '7':
         case '8':
         case '9':
-          int len =  c - '0';
+          int len = c - '0';
           //
           // Lets hope this covers it....
           //
-          if( at < ca.length - 1 && Character.isDigit(ca[at+1])) {
+          if (at < ca.length - 1 && Character.isDigit(ca[at + 1])) {
             len *= 10;
           }
-          for( int i=0 ; i < len ; i++ ) {
+          for (int i = 0; i < len; i++) {
             l.add(Mana.X);
           }
           break;
-        case 'U':
-          l.add(Mana.U);
+        case '/':
+          Mana m1 = l.remove(l.size() - 1);
+          Mana m2 = Mana.fromColorChar(ca[at+1]);
+          m = m1.join(m2);
+          l.add(m);
+          at++;
           break;
-        case 'B':
-          l.add(Mana.B);
+        case '{':
+        case '}':
           break;
-        case 'R':
-          l.add(Mana.R);
-          break;
-        case 'G':
-          l.add(Mana.G);
-          break;
-        case 'W':
-          l.add(Mana.W);
+        default:
+          m = Mana.fromColorChar(c);
+          l.add(m);
           break;
       }
-      slots = new Mana[l.size()];
 
-      //
-      // Make the colorless at the end
-      //
-      Collections.reverse(l);
-
-      int i=0;
-      for( Mana m : l ) {
-        slots[i++] = m;
-      }
     }
+
+    slots = new Mana[l.size()];
+
+    //
+    // Make the colorless at the end
+    //
+    Collections.reverse(l);
+
+    int i=0;
+    for( Mana m2 : l ) {
+      slots[i++] = m2;
+    }
+
   }
 
   @Override

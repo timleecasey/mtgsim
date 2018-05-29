@@ -8,7 +8,7 @@ package org.tlc.mtg.nouns;
  * This means Vigilance is implemented with a composed attack, but no tap.
  * Double Strike is an attack which repeats the damage, some as composed with first strike and normal damage.
  */
-public enum StageNode {
+public enum Phases {
   /**
    * Card load
    */
@@ -55,6 +55,13 @@ public enum StageNode {
    * The actual damage.
    */
   DAMAGE,
-
+  /**
+   * into the graveyard
+   */
+  LEAVE,
+  /**
+   * Exiled, board -> gone.
+   */
+  EXILE,
 
 }
