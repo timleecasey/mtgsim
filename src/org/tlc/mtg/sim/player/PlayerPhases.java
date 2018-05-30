@@ -14,8 +14,8 @@ import java.util.List;
 public class PlayerPhases {
   private Player player;
 
-  public PlayerPhases() {
-    player = new Player();
+  public PlayerPhases(Stats[] stats) {
+    player = new Player(stats);
   }
 
   public static class Untap extends Stage<Player> {
@@ -57,7 +57,7 @@ public class PlayerPhases {
         Card c;
         while( ( c = p.findTopCast()) != null ) {
           p.castSpell(c);
-          Stats.cur.critter++;
+          p.getCur().critter++;
         }
         return p;
       };
@@ -74,7 +74,7 @@ public class PlayerPhases {
             throw new IllegalStateException("Could not pull something found");
           }
           p.placeLand(c);
-          Stats.cur.land++;
+          p.getCur().land++;
         }
 
         if( p.getTurn() > 9 && p.getBoard().getLand().depth() == 0 ) {
@@ -108,7 +108,7 @@ public class PlayerPhases {
         while( p.getHand().depth() > 7 ) {
           Card c = p.getHand().pullTopOne();
           p.getBoard().getGrave().add(c);
-          Stats.cur.discard++;
+          p.getCur().discard++;
         }
         return p;
       };
@@ -116,7 +116,7 @@ public class PlayerPhases {
   }
 
   public void assignDeck(List<Card> cards) {
-    player.resetPlayer();
+    player.resetPlayer(cards.size());
     player.getStages().clear();
     player.getStages().add(new Untap());
     player.getStages().add(new Upkeep());
@@ -132,8 +132,7 @@ public class PlayerPhases {
   public void playout() {
     player.initialDraw();
     while( player.getDeck().hasSome() ) {
-      Stats.cur = Stats.src[player.getTurn()];
-      player.incTurn();
+      player.incTurnAndCur();
 
       for( Stage<Player> s : player.getStages() ) {
         s.func.apply(player);

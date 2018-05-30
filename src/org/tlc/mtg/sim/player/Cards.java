@@ -2,6 +2,7 @@ package org.tlc.mtg.sim.player;
 
 import org.tlc.mtg.nouns.Card;
 import org.tlc.mtg.nouns.ResolvedType;
+import org.tlc.mtg.sim.Stats;
 
 import java.util.ArrayList;
 import java.util.Collection;

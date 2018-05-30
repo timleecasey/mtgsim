@@ -8,6 +8,7 @@ import org.tlc.mtg.nouns.RawCard;
 import org.tlc.mtg.sim.player.PlayerPhases;
 import org.tlc.mtg.util.Counter;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,6 @@ public class MtgSim {
   private List<String> deckLines;
   private DeckSpec protoDeck;
   private Map<Integer, Counter> damageFreqs = new TreeMap<>();
-  private Stats[] stats;
 
   public MtgSim(Map<String, RawCard> cardDict, List<String> deckLines) {
     this.cardDict = cardDict;
@@ -61,51 +61,19 @@ public class MtgSim {
   public void simulate() {
     DeckGenerator gen = new DeckGenerator(protoDeck);
     gen.populate();
-    final Map<Long, Counter> damageFreqs = new HashMap<>();
     final Counter counter = new Counter();
     final Counter constrained = new Counter();
-    final PlayerPhases ptp = new PlayerPhases();
     List<Card> cards = gen.getSrc();
-    Stats.src = new Stats[cards.size()];
-    for( int i=0 ; i < Stats.src.length ; i++ ) {
-      Stats.src[i] = new Stats();
-    }
+    Stats[] stats = Stats.genStats(cards.size());
+    final PlayerPhases ptp = new PlayerPhases(stats);
+    PermuteArray<Card> permute = new PermuteArray<>(cards);
 
-    PermuteArray<Card> permute = new PermuteArray<>(gen.getSrc());
-//        permute.permutations(new PermuteArray.PermuteListVisitor<Card>() {
-//          @Override
-//          public void visit(List<Card> cur) {
-//            counter.inc();
-//            ptp.assignDeck(cur);
-//            ptp.playout();
-//            if (ptp.getPlayer().isConstrained()) {
-//              constrained.inc();
-//            }
-//            if (counter.getValue() % 1000000 == 0) {
-//              System.out.println(constrained.getValue() + " / " + counter.getValue());
-//            }
-//          }
-//        });
-    permute.trials(new PermuteArray.PermuteListVisitor<Card>() {
-      @Override
-      public void visit(List<Card> cur) {
-        counter.inc();
-        ptp.assignDeck(cur);
-        ptp.playout();
-        if (ptp.getPlayer().isConstrained()) {
-          constrained.inc();
-        }
-//            if (counter.getValue() % 100000 == 0) {
-//              System.out.println(constrained.getValue() + " / " + counter.getValue());
-//            }
-      }
-    });
+    PlayerSimulator sim =  new PlayerSimulator(ptp, counter, constrained);
+    permute.trials(sim);
 
-    System.out.println(constrained.getValue() + " / " + counter.getValue());
-    for( long n : damageFreqs.keySet() ) {
-      System.out.println(n + ":" + damageFreqs.get(n));
-    }
-    System.out.println(counter.getValue() + " runs");
+    System.out.println("id,constrained," + constrained.getValue() + " / " + counter.getValue());
+    System.out.println("id,total," + counter.getValue());
+    ResultsIO.writeResults("id", stats);
   }
 
   //
@@ -127,7 +95,6 @@ public class MtgSim {
     sim.parseToDeck();
     System.out.println("Simulation...");
     sim.simulate();
-    ResultsIO.writeResults(sim.results());
   }
 
   protected static int sizeDeck(List<String> cards) {

@@ -5,6 +5,7 @@ import org.tlc.mtg.nouns.CardSorts;
 import org.tlc.mtg.nouns.Mana;
 import org.tlc.mtg.nouns.ResolvedType;
 import org.tlc.mtg.nouns.Stage;
+import org.tlc.mtg.sim.Stats;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,14 +23,17 @@ public class Player {
   private Board board = new Board();
   private Cards out = new Cards();
   private List<Stage<Player>> stages = new ArrayList<>();
+  private Stats[] stats = null;
+  private Stats cur;
 
   private boolean constrained;
 
-  public Player() {
-    resetPlayer();
+  public Player(Stats[] stats) {
+    this.stats = stats;
+    resetPlayer(0);
   }
 
-  public void resetPlayer() {
+  public void resetPlayer(int toDepth) {
     constrained = false;
     turn = 0;
     life = 20;
@@ -165,7 +169,8 @@ public class Player {
     return out;
   }
 
-  public void incTurn() {
+  public void incTurnAndCur() {
+    cur = stats[turn];
     turn++;
   }
 
@@ -183,6 +188,14 @@ public class Player {
 
   public List<Stage<Player>> getStages() {
     return stages;
+  }
+
+  public Stats[] getStats() {
+    return stats;
+  }
+
+  public Stats getCur() {
+    return cur;
   }
 
   @Override

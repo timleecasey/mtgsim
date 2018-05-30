@@ -52,7 +52,7 @@ public class Card {
   }
 
   protected void buildStages() {
-    stages.put(Phases.ATTACK, new Tap());
+    stages.put(Phases.ATTACK_ADD, new Tap());
     stages.put(Phases.TAP, new Tap());
     stages.put(Phases.UNTAP, new Untap());
   }
