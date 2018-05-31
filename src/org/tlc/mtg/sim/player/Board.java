@@ -1,6 +1,7 @@
 package org.tlc.mtg.sim.player;
 
 import org.tlc.mtg.nouns.Card;
+import org.tlc.mtg.nouns.Phases;
 import sun.jvm.hotspot.debugger.win32.coff.ExportDirectoryTable;
 
 /**
@@ -34,8 +35,17 @@ public class Board {
     attackSet.reset();
   }
 
+  public void phase(Phases phase) {
+    PhaseVisitor v = new PhaseVisitor(phase);
+    visitBoard(v);
+  }
+
   public void untap() {
     Cards.CardVisitor v = new UntapVisitor();
+    visitBoard(v);
+  }
+
+  public void visitBoard(Cards.CardVisitor v) {
     land.visit(v);
     artifacts.visit(v);
     planesWalkers.visit(v);
@@ -75,6 +85,19 @@ public class Board {
     @Override
     public void visit(Card c) {
       c.tapped = false;
+    }
+  }
+
+  public static class PhaseVisitor implements Cards.CardVisitor {
+
+    private Phases phase;
+    public PhaseVisitor(Phases phase) {
+      this.phase = phase;
+    }
+
+    @Override
+    public void visit(Card c) {
+      c.applyPhase(phase);
     }
   }
 }

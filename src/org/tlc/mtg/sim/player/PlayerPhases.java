@@ -22,8 +22,7 @@ public class PlayerPhases {
     public Untap() {
       phases.add(Phases.UNTAP);
       func = p -> {
-        p.getBoard().getCritters().clearSummoning();
-        p.getBoard().untap();
+        p.getBoard().visitBoard(new Board.PhaseVisitor(Phases.UNTAP));
         return p;
       };
     }
@@ -32,7 +31,10 @@ public class PlayerPhases {
   public static class Upkeep extends Stage<Player> {
     public Upkeep() {
       phases.add(Phases.UPKEEP);
-      func = p -> p;
+      func = p -> {
+        p.getBoard().visitBoard(new Board.PhaseVisitor(Phases.UPKEEP));
+        return p;
+      };
     }
   }
 
@@ -41,6 +43,7 @@ public class PlayerPhases {
       phases.add(Phases.DRAW);
       func = p -> {
         Card c = p.getDeck().pullTopOne();
+        c.applyPhase(Phases.DRAW);
         p.getHand().add(c);
         return p;
       };

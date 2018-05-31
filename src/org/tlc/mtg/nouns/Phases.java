@@ -2,7 +2,7 @@ package org.tlc.mtg.nouns;
 
 /**
  * Parts of key words have points at which they activate.
- * These are the stages of activation for all key words.
+ * These are the phases of activation for all key words.
  *
  * For example "Vigilance" does not tap during attack.
  * This means Vigilance is implemented with a composed attack, but no tap.
@@ -63,5 +63,8 @@ public enum Phases {
    * Exiled, board -> gone.
    */
   EXILE,
-
+  /**
+   * Put into play from any source
+   */
+  PUT_INTO_PLAY,
 }

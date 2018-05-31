@@ -10,7 +10,15 @@ public class Untap extends Stage<Card> {
 
   public Untap() {
     phases.add(Phases.UNTAP);
-    func = c -> { c.tapped = false; return c; };
+    func = c -> {
+      if( c == null )
+        return null;
+      c.tapped = false;
+      if( c.animal != null ) {
+        c.animal.sick = false;
+      }
+      return c;
+    };
   }
 
 }

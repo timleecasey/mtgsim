@@ -22,7 +22,15 @@ public class Card {
   /**
    * Keywords
    */
-  public Map<Phases, Stage<Card>> stages = new HashMap<>();
+  public Map<Phases, Stage<Card>> phases = new HashMap<>();
+
+  public void applyPhase(Phases p) {
+    Stage<Card> s = phases.get(p);
+    if( s == null ) {
+      return;
+    }
+    s.func.apply(this);
+  }
 
   public void bind(RawCard raw) {
     buildStages();
@@ -34,15 +42,16 @@ public class Card {
     this.animal = new CreatureSpec();
     this.animal.bind(raw);
     if( this.animal.vigilance ) {
-      stages.put(Phases.ATTACK, new Identity(Phases.ATTACK));
+      phases.put(Phases.ATTACK, new Identity(Phases.ATTACK));
     }
     if( this.animal.defender ) {
-      stages.remove(Phases.ATTACK);
+      phases.remove(Phases.ATTACK);
     }
   }
 
   public static Card makeCopy(Card that) {
     Card ret = new Card();
+    ret.phases.putAll(that.phases);
     ret.name = that.name;
     ret.type = that.type;
     ret.cost = that.cost;
@@ -52,9 +61,9 @@ public class Card {
   }
 
   protected void buildStages() {
-    stages.put(Phases.ATTACK_ADD, new Tap());
-    stages.put(Phases.TAP, new Tap());
-    stages.put(Phases.UNTAP, new Untap());
+    phases.put(Phases.ATTACK_ADD, new Tap());
+    phases.put(Phases.TAP, new Tap());
+    phases.put(Phases.UNTAP, new Untap());
   }
 
   public String toString() {

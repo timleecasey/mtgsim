@@ -3,6 +3,7 @@ package org.tlc.mtg.sim.player;
 import org.tlc.mtg.nouns.Card;
 import org.tlc.mtg.nouns.CardSorts;
 import org.tlc.mtg.nouns.Mana;
+import org.tlc.mtg.nouns.Phases;
 import org.tlc.mtg.nouns.ResolvedType;
 import org.tlc.mtg.nouns.Stage;
 import org.tlc.mtg.sim.Stats;
@@ -63,6 +64,7 @@ public class Player {
   }
 
   public void placeLand(Card c) {
+    c.applyPhase(Phases.PUT_INTO_PLAY);
     getBoard().getLand().add(c);
   }
 
@@ -79,7 +81,10 @@ public class Player {
       return;
     }
 
+    c.applyPhase(Phases.CAST);
+
     c.resType.play(getBoard(), c);
+
     for( Card land : plan ) {
       land.tapped = true;
     }
@@ -87,6 +92,9 @@ public class Player {
 
   public void initialDraw() {
     List<Card> draw = deck.takeFromTop(7);
+    for( Card c : draw ) {
+      c.applyPhase(Phases.DRAW);
+    }
     hand.resetAndAddAllCards(draw);
   }
 
