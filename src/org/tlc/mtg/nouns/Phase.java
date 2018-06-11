@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 /**
  */
-public class Stage<T> {
+public class Phase<T> {
   public Set<Phases> phases = new HashSet<>();
   public Function<T, T> func;
 

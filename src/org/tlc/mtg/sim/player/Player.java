@@ -5,7 +5,7 @@ import org.tlc.mtg.nouns.CardSorts;
 import org.tlc.mtg.nouns.Mana;
 import org.tlc.mtg.nouns.Phases;
 import org.tlc.mtg.nouns.ResolvedType;
-import org.tlc.mtg.nouns.Stage;
+import org.tlc.mtg.nouns.Phase;
 import org.tlc.mtg.sim.Stats;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class Player {
   private Hand hand = new Hand();
   private Board board = new Board();
   private Cards out = new Cards();
-  private List<Stage<Player>> stages = new ArrayList<>();
+  private List<Phase<Player>> phases = new ArrayList<>();
   private Stats[] stats = null;
   private Stats cur;
 
@@ -194,8 +194,8 @@ public class Player {
     this.constrained = constrained;
   }
 
-  public List<Stage<Player>> getStages() {
-    return stages;
+  public List<Phase<Player>> getPhases() {
+    return phases;
   }
 
   public Stats[] getStats() {

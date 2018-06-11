@@ -1,6 +1,5 @@
 package org.tlc.mtg.nouns;
 
-import org.tlc.mtg.nouns.cards.Identity;
 import org.tlc.mtg.nouns.cards.Tap;
 import org.tlc.mtg.nouns.cards.Untap;
 
@@ -10,43 +9,34 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Represents the state of a card within a specific game.  Cards cannot be used between games.
  */
 public class Card {
   public String name;
   public String type;
   public ResolvedType resType;
-  public CostSpec cost;
-  public CreatureSpec animal;
+  public CostSpec cost = new CostSpec();
+  public CreatureSpec animal = new CreatureSpec();
   public List<Card> attached = new ArrayList<>();
   public boolean tapped = false;
+  public Mana[] manaSrc;
+  public String text;
   /**
    * Keywords
    */
-  public Map<Phases, Stage<Card>> phases = new HashMap<>();
+  public Map<Phases, Phase<Card>> phases = new HashMap<>();
 
   public void applyPhase(Phases p) {
-    Stage<Card> s = phases.get(p);
+    Phase<Card> s = phases.get(p);
     if( s == null ) {
       return;
     }
     s.func.apply(this);
   }
 
-  public void bind(RawCard raw) {
+  public void bind(RawCard raw, CardBinder binder) {
     buildStages();
-    this.name = raw.getName();
-    this.type = raw.getType();
-    this.resType = ResolvedType.resolve(this.type);
-    this.cost = new CostSpec();
-    this.cost.bind(raw);
-    this.animal = new CreatureSpec();
-    this.animal.bind(raw);
-    if( this.animal.vigilance ) {
-      phases.put(Phases.ATTACK, new Identity(Phases.ATTACK));
-    }
-    if( this.animal.defender ) {
-      phases.remove(Phases.ATTACK);
-    }
+    binder.bind(this, raw);
   }
 
   public static Card makeCopy(Card that) {

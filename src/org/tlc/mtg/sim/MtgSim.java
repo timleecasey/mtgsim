@@ -3,6 +3,7 @@ package org.tlc.mtg.sim;
 import org.tlc.mtg.io.CardIO;
 import org.tlc.mtg.io.ResultsIO;
 import org.tlc.mtg.nouns.Card;
+import org.tlc.mtg.nouns.CardBinder;
 import org.tlc.mtg.nouns.DeckSpec;
 import org.tlc.mtg.nouns.RawCard;
 import org.tlc.mtg.sim.player.PlayerPhases;
@@ -44,6 +45,8 @@ public class MtgSim {
       protoDeck.addPlaceHolder(cnt, nm);
     }
 
+    CardBinder binder = new CardBinder();
+
     for(DeckSpec.PlaceHolder ph : protoDeck.getCards() ) {
       RawCard rc = cardDict.get(ph.cardName);
       if( rc == null ) {
@@ -51,7 +54,7 @@ public class MtgSim {
       }
 
       Card c = new Card();
-      c.bind(rc);
+      c.bind(rc, binder);
 
       ph.card = c;
     }

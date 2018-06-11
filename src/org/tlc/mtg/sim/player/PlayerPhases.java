@@ -2,7 +2,7 @@ package org.tlc.mtg.sim.player;
 
 import org.tlc.mtg.nouns.Card;
 import org.tlc.mtg.nouns.ResolvedType;
-import org.tlc.mtg.nouns.Stage;
+import org.tlc.mtg.nouns.Phase;
 import org.tlc.mtg.nouns.Phases;
 import org.tlc.mtg.sim.Stats;
 
@@ -18,7 +18,7 @@ public class PlayerPhases {
     player = new Player(stats);
   }
 
-  public static class Untap extends Stage<Player> {
+  public static class Untap extends Phase<Player> {
     public Untap() {
       phases.add(Phases.UNTAP);
       func = p -> {
@@ -28,7 +28,7 @@ public class PlayerPhases {
     }
   }
 
-  public static class Upkeep extends Stage<Player> {
+  public static class Upkeep extends Phase<Player> {
     public Upkeep() {
       phases.add(Phases.UPKEEP);
       func = p -> {
@@ -38,7 +38,7 @@ public class PlayerPhases {
     }
   }
 
-  public static class Draw extends Stage<Player> {
+  public static class Draw extends Phase<Player> {
     public Draw() {
       phases.add(Phases.DRAW);
       func = p -> {
@@ -50,7 +50,7 @@ public class PlayerPhases {
     }
   }
 
-  public static class Spells extends Stage<Player> {
+  public static class Spells extends Phase<Player> {
     public Spells() {
       phases.add(Phases.CAST);
       func = p -> {
@@ -67,7 +67,7 @@ public class PlayerPhases {
     }
   }
 
-  public static class Land extends Stage<Player> {
+  public static class Land extends Phase<Player> {
     public Land() {
       phases.add(Phases.LAND);
       func = p -> {
@@ -89,7 +89,7 @@ public class PlayerPhases {
     }
   }
 
-  public static class Attack extends Stage<Player> {
+  public static class Attack extends Phase<Player> {
     public Attack() {
       phases.add(Phases.CLEANUP);
       func = p -> p;
@@ -97,14 +97,14 @@ public class PlayerPhases {
   }
 
 
-  public static class CleanUp extends Stage<Player> {
+  public static class CleanUp extends Phase<Player> {
     public CleanUp() {
       phases.add(Phases.CLEANUP);
       func = p -> p;
     }
   }
 
-  public static class End extends Stage<Player> {
+  public static class End extends Phase<Player> {
     public End() {
       phases.add(Phases.END);
       func = p -> {
@@ -120,15 +120,15 @@ public class PlayerPhases {
 
   public void assignDeck(List<Card> cards) {
     player.resetPlayer(cards.size());
-    player.getStages().clear();
-    player.getStages().add(new Untap());
-    player.getStages().add(new Upkeep());
-    player.getStages().add(new Draw());
-    player.getStages().add(new Land());
-    player.getStages().add(new Spells());
-    player.getStages().add(new Attack());
-    player.getStages().add(new CleanUp());
-    player.getStages().add(new End());
+    player.getPhases().clear();
+    player.getPhases().add(new Untap());
+    player.getPhases().add(new Upkeep());
+    player.getPhases().add(new Draw());
+    player.getPhases().add(new Land());
+    player.getPhases().add(new Spells());
+    player.getPhases().add(new Attack());
+    player.getPhases().add(new CleanUp());
+    player.getPhases().add(new End());
     player.getDeck().resetAndAddAllCards(cards);
   }
 
@@ -137,7 +137,7 @@ public class PlayerPhases {
     while( player.getDeck().hasSome() ) {
       player.incTurnAndCur();
 
-      for( Stage<Player> s : player.getStages() ) {
+      for( Phase<Player> s : player.getPhases() ) {
         s.func.apply(player);
       }
 
