@@ -37,6 +37,29 @@ public class Cards {
     }
   }
 
+  public static class ManaSourceCollector implements CardVisitor {
+    protected List<Card> collected = new ArrayList<>();
+    @Override
+    public void visit(Card c) {
+      boolean add = false;
+      if( c.resType.equals(ResolvedType.LAND) ) {
+        add = true;
+      }
+
+      if( !add && c.manaSrc != null ) {
+        add = true;
+      }
+
+      if( add && ! c.tapped ) {
+        collected.add(c);
+      }
+    }
+
+    public List<Card> getCollected() {
+      return collected;
+    }
+  }
+
   public void add(Card c) {
     cards.add(c);
   }

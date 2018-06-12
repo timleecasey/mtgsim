@@ -43,6 +43,7 @@ public class Board {
   public void untap() {
     Cards.CardVisitor v = new UntapVisitor();
     visitBoard(v);
+    critters.clearSummoning();
   }
 
   public void visitBoard(Cards.CardVisitor v) {

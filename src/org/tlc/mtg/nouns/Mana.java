@@ -39,7 +39,7 @@ public enum  Mana {
   G {
     @Override
     public boolean accepts(Card c) {
-      return c.name.equals("Forrest");
+      return c.name.equals("Forest");
     }
 
     @Override

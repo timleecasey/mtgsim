@@ -66,5 +66,5 @@ public enum Phases {
   /**
    * Put into play from any source
    */
-  PUT_INTO_PLAY,
+  COMES_INTO_PLAY,
 }

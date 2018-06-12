@@ -128,14 +128,16 @@ public class CardBinder {
     c.animal.power = Integer.valueOf(pStr);
     c.animal.toughness = Integer.valueOf(tStr);
 
-    c.animal.flying = c.text.toLowerCase().contains("flying");
-    c.animal.vigilance = c.text.toLowerCase().contains("vigilance");
-    c.animal.firstStrike = c.text.toLowerCase().contains("first strike");
-    c.animal.doubleStrike = c.text.toLowerCase().contains("double strike");
-    c.animal.defender = c.text.toLowerCase().contains("defender");
-    c.animal.heroic = c.text.toLowerCase().contains("heroic");
-    c.animal.inspired = c.text.toLowerCase().contains("inspired");
-    c.animal.lifelink = c.text.toLowerCase().contains("lifelink");
+    if( c.text != null ) {
+      c.animal.flying = c.text.toLowerCase().contains("flying");
+      c.animal.vigilance = c.text.toLowerCase().contains("vigilance");
+      c.animal.firstStrike = c.text.toLowerCase().contains("first strike");
+      c.animal.doubleStrike = c.text.toLowerCase().contains("double strike");
+      c.animal.defender = c.text.toLowerCase().contains("defender");
+      c.animal.heroic = c.text.toLowerCase().contains("heroic");
+      c.animal.inspired = c.text.toLowerCase().contains("inspired");
+      c.animal.lifelink = c.text.toLowerCase().contains("lifelink");
+    }
 
     @SuppressWarnings("unchecked") List<String> typeList = (List) raw.getFieldByName("types");
     @SuppressWarnings("unchecked") List<String> subTypeList = (List) raw.getFieldByName("subtypes");

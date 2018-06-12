@@ -18,7 +18,7 @@ public class TextBinder {
 
   static {
     TextToCardMods mod = new TextToCardMods(Pattern.compile("\\{T\\}: Add \\{(R|B|U|W|G|X)\\} to your mana pool."),
-        new CardMod(Phases.PUT_INTO_PLAY, Function.<Card>identity()));
+        new CardMod(Phases.COMES_INTO_PLAY, Function.<Card>identity()));
     binder.mods.add(mod);
   }
 

@@ -64,7 +64,7 @@ public class Player {
   }
 
   public void placeLand(Card c) {
-    c.applyPhase(Phases.PUT_INTO_PLAY);
+    c.applyPhase(Phases.COMES_INTO_PLAY);
     getBoard().getLand().add(c);
   }
 
@@ -120,9 +120,7 @@ public class Player {
   protected Set<Card> castPlan(Card c) {
     if( c.cost.hasCost ) {
       Set<Card> toBeUsed = new HashSet<>();
-      Cards.CardCollector cc = new Cards.CardCollector();
-      getBoard().getLand().visit(cc);
-      List<Card> src = cc.getCollected();
+      List<Card> src = collectManaSources(toBeUsed);
       for( Mana m : c.cost.slots) {
         Card land = findAndRemove(src, m);
         if( land == null ) {
@@ -136,10 +134,18 @@ public class Player {
     }
   }
 
+  protected List<Card> collectManaSources(Set<Card> manaPotential) {
+    Cards.ManaSourceCollector cc = new Cards.ManaSourceCollector();
+    getBoard().getLand().visit(cc);
+    getBoard().getCritters().visit(cc);
+    getBoard().getArtifacts().visit(cc);
+    return cc.getCollected();
+  }
+
   protected Card findAndRemove(List<Card> src, Mana m) {
     Card ret = null;
     for( Card c : src ) {
-      if( ! c.resType.equals(ResolvedType.LAND) ) {
+      if( ! (c.resType.equals(ResolvedType.LAND)  || c.manaSrc != null) ) {
         continue;
       }
       if( c.tapped ) {

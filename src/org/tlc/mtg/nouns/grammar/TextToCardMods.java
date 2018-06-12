@@ -32,7 +32,7 @@ public class TextToCardMods {
     Matcher m = trigger.matcher(c.text);
     if( m.matches() ) {
       if( m.groupCount() > 0 ) {
-        convertMana(c, m, 0);
+        convertMana(c, m, 1);
       }
       for( CardMod mod : mods ) {
         Phase<Card> phase = c.phases.get(mod.phase);
