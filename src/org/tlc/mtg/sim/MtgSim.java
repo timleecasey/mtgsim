@@ -6,6 +6,7 @@ import org.tlc.mtg.nouns.Card;
 import org.tlc.mtg.nouns.CardBinder;
 import org.tlc.mtg.nouns.DeckSpec;
 import org.tlc.mtg.nouns.RawCard;
+import org.tlc.mtg.sim.player.Player;
 import org.tlc.mtg.sim.player.PlayerPhases;
 import org.tlc.mtg.util.Counter;
 
@@ -68,10 +69,10 @@ public class MtgSim {
     final Counter constrained = new Counter();
     List<Card> cards = gen.getSrc();
     Stats[] stats = Stats.genStats(cards.size());
-    final PlayerPhases ptp = new PlayerPhases(stats);
+    Player player = new Player(stats);
     PermuteArray<Card> permute = new PermuteArray<>(cards);
 
-    PlayerSimulator sim =  new PlayerSimulator(ptp, counter, constrained);
+    PlayerSimulator sim =  new PlayerSimulator(player, counter, constrained);
     permute.trials(sim);
 
     System.out.println("id,constrained," + constrained.getValue() + " / " + counter.getValue());

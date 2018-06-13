@@ -4,7 +4,6 @@ import org.tlc.mtg.nouns.Card;
 import org.tlc.mtg.nouns.ResolvedType;
 import org.tlc.mtg.nouns.Phase;
 import org.tlc.mtg.nouns.Phases;
-import org.tlc.mtg.sim.Stats;
 
 import java.util.List;
 
@@ -12,10 +11,8 @@ import java.util.List;
  * Holder of player phases
  */
 public class PlayerPhases {
-  private Player player;
 
-  public PlayerPhases(Stats[] stats) {
-    player = new Player(stats);
+  public PlayerPhases() {
   }
 
   public static class Untap extends Phase<Player> {
@@ -118,8 +115,12 @@ public class PlayerPhases {
     }
   }
 
-  public void assignDeck(List<Card> cards) {
+  public void assignDeck(Player player, List<Card> cards) {
     player.resetPlayer(cards.size());
+    player.getDeck().resetAndAddAllCards(cards);
+  }
+
+  public void assignPhases(Player player) {
     player.getPhases().clear();
     player.getPhases().add(new Untap());
     player.getPhases().add(new Upkeep());
@@ -129,25 +130,24 @@ public class PlayerPhases {
     player.getPhases().add(new Attack());
     player.getPhases().add(new CleanUp());
     player.getPhases().add(new End());
-    player.getDeck().resetAndAddAllCards(cards);
   }
 
-  public void playout() {
+  public void playout(Player player) {
     player.initialDraw();
     while( player.getDeck().hasSome() ) {
-      player.incTurnAndCur();
-
-      for( Phase<Player> s : player.getPhases() ) {
-        s.func.apply(player);
-      }
-
+      turn(player);
       if( player.isConstrained() ) {
         break;
       }
     }
   }
 
-  public Player getPlayer() {
-    return player;
+  public void turn(Player player) {
+    player.incTurnAndCur();
+
+    for( Phase<Player> s : player.getPhases() ) {
+      s.func.apply(player);
+    }
   }
+
 }

@@ -52,15 +52,15 @@ public class CardBinderTest {
     Player p = new Player(stats);
 
 
-    p.getPhases().clear();
-    p.getPhases().add(new PlayerPhases.Untap());
-    p.getPhases().add(new PlayerPhases.Upkeep());
-    p.getPhases().add(new PlayerPhases.Draw());
-    p.getPhases().add(new PlayerPhases.Land());
-    p.getPhases().add(new PlayerPhases.Spells());
-    p.getPhases().add(new PlayerPhases.Attack());
-    p.getPhases().add(new PlayerPhases.CleanUp());
-    p.getPhases().add(new PlayerPhases.End());
+//    p.getPhases().clear();
+//    p.getPhases().add(new PlayerPhases.Untap());
+//    p.getPhases().add(new PlayerPhases.Upkeep());
+//    p.getPhases().add(new PlayerPhases.Draw());
+//    p.getPhases().add(new PlayerPhases.Land());
+//    p.getPhases().add(new PlayerPhases.Spells());
+//    p.getPhases().add(new PlayerPhases.Attack());
+//    p.getPhases().add(new PlayerPhases.CleanUp());
+//    p.getPhases().add(new PlayerPhases.End());
 
     p.placeLand(forrest);
     new PlayerPhases.Untap().func.apply(p);

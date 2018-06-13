@@ -42,6 +42,9 @@ public class Player {
     hand.reset();
     board.reset();
     out.reset();
+    if( stats != null && stats.length > 0 ) {
+      cur = stats[turn];
+    }
   }
 
   /**
@@ -82,6 +85,7 @@ public class Player {
     }
 
     c.applyPhase(Phases.CAST);
+    c.applyPhase(Phases.COMES_INTO_PLAY);
 
     c.resType.play(getBoard(), c);
 

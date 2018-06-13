@@ -11,30 +11,34 @@ import java.util.Map;
  */
 public class SampleCards {
   
-  static Map<String, Object> elves() throws IOException {
+  public static Map<String, Object> elves() {
     @SuppressWarnings("unchecked") Map<String,Object> m = rawCard(elfMap);
     return m;
   }
 
-  static Map<String, Object> forrest() throws IOException {
+  public static Map<String, Object> forrest() {
     @SuppressWarnings("unchecked") Map<String,Object> m = rawCard(forrestMap);
     return m;
   }
 
-  static Map<String, Object> bears() throws IOException {
+  public static Map<String, Object> bears() {
     @SuppressWarnings("unchecked") Map<String,Object> m = rawCard(bearMap);
     return m;
   }
 
-  private static Map<String, Object> rawCard(String src) throws IOException {
-    JsonFactory factory = new JsonFactory();
-    factory.enable(JsonParser.Feature.ALLOW_COMMENTS);
+  private static Map<String, Object> rawCard(String src) {
+    try {
+      JsonFactory factory = new JsonFactory();
+      factory.enable(JsonParser.Feature.ALLOW_COMMENTS);
 
-    JsonParser jp = factory.createParser(src);
-    jp.setCodec(new ObjectMapper());
+      JsonParser jp = factory.createParser(src);
+      jp.setCodec(new ObjectMapper());
 
-    @SuppressWarnings("unchecked") Map<String,Object> m = jp.readValueAs(Map.class);
-    return m;
+      @SuppressWarnings("unchecked") Map<String, Object> m = jp.readValueAs(Map.class);
+      return m;
+    } catch(IOException e) {
+      throw new RuntimeException("Could not create card", e);
+    }
 
   }
 
