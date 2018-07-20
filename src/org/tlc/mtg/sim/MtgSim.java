@@ -20,35 +20,45 @@ import java.util.TreeMap;
  */
 public class MtgSim {
   private Map<String, RawCard> cardDict;
-  private List<String> deckLines;
-  private DeckSpec protoDeck;
-  private Map<Integer, Counter> damageFreqs = new TreeMap<>();
+  private ProtoPlayer proto;
 
-  public MtgSim(Map<String, RawCard> cardDict, List<String> deckLines) {
+  public MtgSim(Map<String, RawCard> cardDict, ProtoPlayer pp) {
     this.cardDict = cardDict;
-    this.deckLines = deckLines;
-    protoDeck = new DeckSpec();
-    damageFreqs = new HashMap<>();
+    this.proto = pp;
+  }
+
+  protected boolean isOnlyDigits(String s) {
+    for( char c : s.toCharArray() ) {
+      if( ! Character.isDigit(c) ) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public void parseToDeck() {
-    for( String ln : deckLines) {
+    for( String ln : proto.getDeckLines()) {
 
       int sp = ln.indexOf(' ');
+      String cntStr = ln.substring(0, sp);
 
-      int cnt = Integer.valueOf(ln.substring(0, sp));
-      if( cnt < 1 ) {
-        throw new IllegalArgumentException("Could not find a space to resolve # Name " + ln);
+      if( isOnlyDigits(cntStr) ) {
+        int cnt = Integer.valueOf(cntStr);
+        if (cnt < 1) {
+          throw new IllegalArgumentException("Could not find a space to resolve # Name " + ln);
+        }
+
+        String nm = ln.substring(sp + 1).trim();
+
+        proto.getProtoDeck().addPlaceHolder(cnt, nm);
+      } else {
+        proto.getProtoDeck().addPlaceHolder(1, ln);
       }
-
-      String nm = ln.substring(sp + 1).trim();
-
-      protoDeck.addPlaceHolder(cnt, nm);
     }
 
     CardBinder binder = new CardBinder();
 
-    for(DeckSpec.PlaceHolder ph : protoDeck.getCards() ) {
+    for(DeckSpec.PlaceHolder ph : proto.getProtoDeck().getCards() ) {
       RawCard rc = cardDict.get(ph.cardName);
       if( rc == null ) {
         throw new NullPointerException("Could not find card named " + ph.cardName);
@@ -63,7 +73,7 @@ public class MtgSim {
   }
 
   public void simulate() {
-    DeckGenerator gen = new DeckGenerator(protoDeck);
+    DeckGenerator gen = new DeckGenerator(proto.getProtoDeck());
     gen.populate();
     final Counter counter = new Counter();
     final Counter constrained = new Counter();
@@ -84,7 +94,7 @@ public class MtgSim {
   // Damage, frequency
   //
   public Map<Integer, Counter> results() {
-    return damageFreqs;
+    return proto.getDamageFreqs();
   }
 
   public static void main(String[] av) throws Exception {
@@ -95,7 +105,8 @@ public class MtgSim {
     List<String> cardLines = CardIO.readCardLines(av[1]);
     System.out.println("Deck contains " + cardLines.size() + " lines with " + sizeDeck(cardLines) + " cards.");
 
-    MtgSim sim = new MtgSim(cards, cardLines);
+    ProtoPlayer pp = new ProtoPlayer(cardLines, new DeckSpec());
+    MtgSim sim = new MtgSim(cards, pp);
     sim.parseToDeck();
     System.out.println("Simulation...");
     sim.simulate();
@@ -119,5 +130,28 @@ public class MtgSim {
       }
     }
     return total;
+  }
+
+  public static class ProtoPlayer {
+    private List<String> deckLines;
+    private DeckSpec protoDeck;
+    private Map<Integer, Counter> damageFreqs = new TreeMap<>();
+
+    public ProtoPlayer(List<String> deckLines, DeckSpec protoDeck) {
+      this.deckLines = deckLines;
+      this.protoDeck = protoDeck;
+    }
+
+    public List<String> getDeckLines() {
+      return deckLines;
+    }
+
+    public DeckSpec getProtoDeck() {
+      return protoDeck;
+    }
+
+    public Map<Integer, Counter> getDamageFreqs() {
+      return damageFreqs;
+    }
   }
 }

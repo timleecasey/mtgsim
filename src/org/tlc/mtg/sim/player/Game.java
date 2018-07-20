@@ -9,9 +9,9 @@ public class Game {
   private int cur;
   private PlayerPhases phases;
 
-  public Game() {
-    cur = 0;
-    phases = new PlayerPhases();
+  public Game(PlayerPhases phases) {
+    this.cur = 0;
+    this.phases = phases;
   }
 
   public void addPlayer(Player p) {
