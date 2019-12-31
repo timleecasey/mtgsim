@@ -96,8 +96,8 @@ public class Cards {
     return depth() > 0;
   }
 
-  public Card hasOneOrNull(ResolvedType type) {
-    List<Card> ret = new ArrayList<>();
+  public Card hasOneOrNull(final ResolvedType type) {
+    final List<Card> ret = new ArrayList<>();
     visit(new CardVisitor() {
       @Override
       public void visit(Card c) {
