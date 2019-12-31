@@ -9,11 +9,11 @@ import java.util.Random;
  */
 public class PermuteIndex {
     public interface PermuteVisitor {
-        public void visit(int[] a);
+      void visit(int[] a);
     }
 
     public interface PermuteListVisitor {
-        public void visit(List<Integer> a);
+      void visit(List<Integer> a);
     }
 
     private int[] a;

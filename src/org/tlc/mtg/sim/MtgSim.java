@@ -75,8 +75,8 @@ public class MtgSim {
   public void simulate() {
     DeckGenerator gen = new DeckGenerator(proto.getProtoDeck());
     gen.populate();
-    final Counter counter = new Counter();
-    final Counter constrained = new Counter();
+    Counter counter = new Counter();
+    Counter constrained = new Counter();
     List<Card> cards = gen.getSrc();
     Stats[] stats = Stats.genStats(cards.size());
     Player player = new Player(stats);

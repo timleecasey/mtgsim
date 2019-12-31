@@ -27,30 +27,27 @@ public class PermuteArray<T> {
         indexes = new PermuteIndex(a);
     }
 
+    //
+    // This is a really good idea, but really poor impl.
+    //
     public void permutations(final PermuteListVisitor<T> v) {
-        indexes.generate(new PermuteIndex.PermuteVisitor() {
-            @Override
-            public void visit(int[] a) {
-                vSrc.clear();
-                for( int i=0 ; i < src.size() ; i++ ) {
-                    vSrc.add(src.get(a[i]));
-                }
-                v.visit(vSrc);
+        indexes.generate(a -> {
+            vSrc.clear();
+            for( int i=0 ; i < src.size() ; i++ ) {
+                vSrc.add(src.get(a[i]));
             }
+            v.visit(vSrc);
         });
     }
 
     public void trials(PermuteListVisitor<T> v) {
         long start = System.currentTimeMillis();
-        indexes.trials(new PermuteIndex.PermuteListVisitor() {
-            @Override
-            public void visit(List<Integer> a) {
-                vSrc.clear();
-                for( int i=0 ; i < src.size() ; i++ ) {
-                    vSrc.add(src.get(a.get(i)));
-                }
-                v.visit(vSrc);
+        indexes.trials(a -> {
+            vSrc.clear();
+            for( int i=0 ; i < src.size() ; i++ ) {
+                vSrc.add(src.get(a.get(i)));
             }
+            v.visit(vSrc);
         }, 100000);
         long end = System.currentTimeMillis();
         System.out.println("Sim time: " + DateTimeUtils.formatTime(end - start));
